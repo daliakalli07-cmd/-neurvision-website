@@ -83,6 +83,13 @@ const TEAM = [
 ];
 
 export default function App() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+useEffect(() => {
+  const handleResize = () => setIsMobile(window.innerWidth <= 768);
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
   const [activeNav, setActiveNav] = useState("Services");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -121,69 +128,89 @@ export default function App() {
     <div style={styles.root}>
       {/* ── NAV ── */}
       <nav style={{ ...styles.nav, ...(scrolled ? styles.navScrolled : {}) }}>
-        <div style={styles.navInner}>
-          <div style={styles.logo} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-            <span style={styles.logoMark}>⬡</span>
-            <span style={styles.logoText}>NEURVISION</span>
-          </div>
-          <div style={styles.navLinks}>
-            {NAV_LINKS.map((l) => (
-              <button
-                key={l}
-                style={{ ...styles.navLink, ...(activeNav === l ? styles.navLinkActive : {}) }}
-                onClick={() => scrollTo(l)}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-          <button style={styles.ctaBtn} onClick={() => scrollTo("Contact")}>Get in Touch</button>
-          <button style={styles.burger} onClick={() => setMenuOpen(!menuOpen)}>☰</button>
-        </div>
-        {menuOpen && (
-          <div style={styles.mobileMenu}>
-            {NAV_LINKS.map((l) => (
-              <button key={l} style={styles.mobileLink} onClick={() => scrollTo(l)}>{l}</button>
-            ))}
-          </div>
-        )}
-      </nav>
+  <div style={styles.navInner}>
+    <div style={styles.logo} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+      <span style={styles.logoMark}>⬡</span>
+      <span style={styles.logoText}>NEURVISION</span>
+    </div>
+
+    <div style={{
+      ...styles.navLinks,
+      display: isMobile ? "none" : "flex",
+    }}>
+      {NAV_LINKS.map((l) => (
+        <button
+          key={l}
+          style={{ ...styles.navLink, ...(activeNav === l ? styles.navLinkActive : {}) }}
+          onClick={() => scrollTo(l)}
+        >
+          {l}
+        </button>
+      ))}
+    </div>
+
+    <button style={{
+      ...styles.ctaBtn,
+      display: isMobile ? "none" : "block",
+    }} onClick={() => scrollTo("Contact")}>Get in Touch</button>
+
+    <button style={{
+      ...styles.burger,
+      display: isMobile ? "block" : "none",
+    }} onClick={() => setMenuOpen(!menuOpen)}>☰</button>
+  </div>
+
+  {menuOpen && (
+    <div style={styles.mobileMenu}>
+      {NAV_LINKS.map((l) => (
+        <button key={l} style={styles.mobileLink} onClick={() => scrollTo(l)}>{l}</button>
+      ))}
+    </div>
+  )}
+</nav>
 
       {/* ── HERO ── */}
-      <section style={styles.hero}>
-        <div style={styles.heroGrid}>
-          {Array.from({ length: 64 }).map((_, i) => (
-            <div key={i} style={{ ...styles.heroCell, opacity: Math.random() * 0.15 + 0.02 }} />
-          ))}
-        </div>
-        <div style={styles.heroContent}>
-          <div style={styles.heroBadge}>
-            <span style={styles.heroBadgeDot} />
-             USTHB TechInnov
-          </div>
-          <h1 style={styles.heroH1}>
-            Industrial AI<br />
-            <span style={styles.heroAccent}>that runs at the edge</span>
-          </h1>
-          <p style={styles.heroSub}>
-            NEURVISION delivers real-time machine vision, OPC UA industrial communication,
-            and web supervision — all processed locally on embedded hardware.
-            No cloud dependency for critical operations.
-          </p>
-          <div style={styles.heroActions}>
-            <button style={styles.heroPrimary} onClick={() => scrollTo("Services")}>Explore Services</button>
-            <button style={styles.heroSecondary} onClick={() => scrollTo("Architecture")}>View Architecture</button>
-          </div>
-          <div style={styles.heroPlatforms}>
-            {["NVIDIA Jetson Orin Nano", "YOLOv8", "OPC UA", "Siemens S7-1200"].map((p) => (
-              <span key={p} style={styles.heroPill}>{p}</span>
-            ))}
-          </div>
-        </div>
-        <div style={styles.heroVisual}>
-          <HexDiagram />
-        </div>
-      </section>
+   <section style={{
+  ...styles.hero,
+  flexDirection: isMobile ? "column" : "row",
+  padding: isMobile ? "100px 16px 40px" : "100px 24px 60px",
+}}>
+  <div style={styles.heroGrid}>
+    {Array.from({ length: 64 }).map((_, i) => (
+      <div key={i} style={{ ...styles.heroCell, opacity: Math.random() * 0.15 + 0.02 }} />
+    ))}
+  </div>
+  <div style={styles.heroContent}>
+    <div style={styles.heroBadge}>
+      <span style={styles.heroBadgeDot} />
+      USTHB TechInnov
+    </div>
+    <h1 style={styles.heroH1}>
+      Industrial AI<br />
+      <span style={styles.heroAccent}>that runs at the edge</span>
+    </h1>
+    <p style={styles.heroSub}>
+      NEURVISION delivers real-time machine vision, OPC UA industrial communication,
+      and web supervision — all processed locally on embedded hardware.
+      No cloud dependency for critical operations.
+    </p>
+    <div style={styles.heroActions}>
+      <button style={styles.heroPrimary} onClick={() => scrollTo("Services")}>Explore Services</button>
+      <button style={styles.heroSecondary} onClick={() => scrollTo("Architecture")}>View Architecture</button>
+    </div>
+    <div style={styles.heroPlatforms}>
+      {["NVIDIA Jetson Orin Nano", "YOLOv8", "OPC UA", "Siemens S7-1200"].map((p) => (
+        <span key={p} style={styles.heroPill}>{p}</span>
+      ))}
+    </div>
+  </div>
+
+  {!isMobile && (
+    <div style={styles.heroVisual}>
+      <HexDiagram />
+    </div>
+  )}
+</section>
 
       {/* ── METRICS BAND ── */}
       <section ref={metricsRef} style={styles.metricsBand}>
