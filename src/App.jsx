@@ -571,18 +571,13 @@ const styles = {
     borderBottom: "1px solid rgba(79,195,247,0.08)",
   },
   // HERO
- hero: {
-  minHeight: "100vh",
-  position: "relative",
-  display: "flex",
-  alignItems: "center",
-  flexDirection: "column",        // ← add this
-  padding: "100px 24px 60px",
-  maxWidth: "100%",               // ← change from 1200 to 100%
-  margin: "0 auto",
-  gap: 48,
-  overflowX: "hidden",            // ← add this
-},
+  hero: {
+    minHeight: "100vh", position: "relative",
+    display: "flex", alignItems: "center",
+    padding: "100px 24px 60px",
+    maxWidth: 1200, margin: "0 auto",
+    gap: 48,
+  },
   heroGrid: {
     position: "absolute", inset: 0,
     display: "grid", gridTemplateColumns: "repeat(8, 1fr)",
